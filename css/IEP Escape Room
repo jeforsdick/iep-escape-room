@@ -1,0 +1,13 @@
+```
+iep-escape-room/
+├── index.html
+├── css/
+│   └── styles.css
+├── js/
+│   ├── timer.js
+│   ├── puzzles.js
+│   └── validation.js
+├── data/
+│   └── puzzles.json
+└── README.md
+```
