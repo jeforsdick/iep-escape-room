@@ -5,9 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IEP Goal Writing Escape Room</title>
     <link rel="stylesheet" href="css/styles.css">
+    <style>
+        /* Critical inline styles for immediate functionality */
+        .hidden {
+            display: none !important;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
+        <!-- Progress and Timer Bar -->
         <nav class="progress-nav">
             <div class="progress-bar">
                 <div class="progress" id="progress"></div>
@@ -19,76 +31,176 @@
             <!-- Introduction Room -->
             <div class="room" id="intro-room">
                 <h1>The Missing IEP Files</h1>
-                <p class="scenario">Welcome, Special Education teacher! The IEP meeting starts in 45 minutes, but the files have been locked. Can you solve the puzzles in time?</p>
-                <button id="start-btn" class="start-btn">Begin Challenge</button>
+                <div class="scenario-container">
+                    <h2>Emergency Situation!</h2>
+                    <p class="scenario">
+                        Welcome, Special Education teacher! We have an emergency situation. 
+                        The IEP meeting starts in 45 minutes, but the files have been locked in a secure digital system. 
+                        You'll need to demonstrate your knowledge of IEP goal writing to unlock the files before the meeting begins!
+                    </p>
+                    <button id="start-btn" class="start-btn">Begin Challenge</button>
+                </div>
             </div>
 
             <!-- Practice Room -->
             <div class="room hidden" id="practice-room">
-                <h2>Practice Puzzle</h2>
+                <h2>Practice Puzzle: Unscramble the Word</h2>
                 <div class="puzzle-container">
-                    <p>Unscramble these letters to find a key term in IEP goal writing:</p>
+                    <p class="instructions">To start, unscramble these letters to find a key term in IEP goal writing:</p>
                     <div class="scrambled-word">BLESUAMEAR</div>
-                    <input type="text" id="practice-answer" placeholder="Enter your answer">
-                    <button id="practice-submit">Submit</button>
-                    <div class="feedback" id="practice-feedback"></div>
+                    <div class="input-container">
+                        <input type="text" 
+                               id="practice-answer" 
+                               class="puzzle-input" 
+                               placeholder="Enter your answer"
+                               autocomplete="off">
+                        <button id="practice-submit" class="submit-btn">Submit Answer</button>
+                    </div>
+                    <div class="feedback hidden" id="practice-feedback"></div>
                 </div>
             </div>
 
-            <!-- SMART Room -->
+            <!-- SMART Components Room -->
             <div class="room hidden" id="smart-room">
                 <h2>SMART Components Challenge</h2>
-                <div class="matching-puzzle">
-                    <div id="terms"></div>
-                    <div id="definitions"></div>
+                <div class="puzzle-container">
+                    <p class="instructions">Match each SMART component with its correct definition:</p>
+                    <div class="matching-puzzle">
+                        <div id="terms" class="terms-container"></div>
+                        <div id="definitions" class="definitions-container"></div>
+                    </div>
+                    <div class="input-container">
+                        <input type="text" 
+                               id="smart-answer" 
+                               class="puzzle-input" 
+                               placeholder="Enter the secret code"
+                               autocomplete="off">
+                        <button id="smart-submit" class="submit-btn">Submit Code</button>
+                    </div>
+                    <div class="feedback hidden" id="smart-feedback"></div>
                 </div>
-                <input type="text" id="smart-answer" placeholder="Enter the code">
-                <button id="smart-submit">Submit</button>
-                <div class="feedback" id="smart-feedback"></div>
             </div>
 
-            <!-- Final Room -->
+            <!-- Final Challenge Room -->
             <div class="room hidden" id="final-room">
-                <h2>Final Challenge</h2>
-                <div class="goal-writing">
-                    <p class="scenario" id="student-scenario"></p>
-                    <textarea id="goal-answer" placeholder="Write your SMART goal here..."></textarea>
-                    <button id="goal-submit">Submit Goal</button>
-                    <div class="feedback" id="final-feedback"></div>
+                <h2>Final Challenge: Write a SMART Goal</h2>
+                <div class="puzzle-container">
+                    <div class="scenario-box">
+                        <h3>Student Profile</h3>
+                        <p id="student-scenario">
+                            Alex is a 3rd-grade student who currently reads 45 words per minute 
+                            at grade level with 85% accuracy. The grade-level expectation is 90 
+                            words per minute with 95% accuracy. Alex shows strong comprehension 
+                            when text is read aloud.
+                        </p>
+                    </div>
+                    <div class="goal-writing">
+                        <label for="goal-answer">Write a SMART Goal for Alex:</label>
+                        <textarea id="goal-answer" 
+                                  class="goal-textarea" 
+                                  placeholder="Write your SMART goal here..."
+                                  rows="6"></textarea>
+                        <button id="goal-submit" class="submit-btn">Submit Goal</button>
+                    </div>
+                    <div class="feedback hidden" id="final-feedback"></div>
+                </div>
+            </div>
+
+            <!-- Completion Room -->
+            <div class="room hidden" id="completion-room">
+                <h2>Congratulations!</h2>
+                <div class="completion-message">
+                    <p>You've successfully retrieved the IEP files in time for the meeting!</p>
+                    <button id="restart-btn" class="start-btn">Play Again</button>
                 </div>
             </div>
         </main>
 
+        <!-- Hint System -->
         <div class="hint-system">
-            <button id="hint-btn">Get Hint (3 remaining)</button>
-            <p id="current-hint"></p>
+            <button id="hint-btn" class="hint-btn">Get Hint (3 remaining)</button>
+            <p id="current-hint" class="hint-text"></p>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/timer.js"></script>
     <script src="js/puzzles.js"></script>
     <script src="js/validation.js"></script>
     <script>
         // Initialize game when document loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize components
+            if (window.gameTimer) {
+                window.gameTimer.updateDisplay();
+            }
+
             // Get the start button
             const startButton = document.getElementById('start-btn');
             
             // Add click event listener to start button
-            startButton.addEventListener('click', function() {
-                // Hide intro room
-                document.getElementById('intro-room').classList.add('hidden');
-                // Show practice room
-                document.getElementById('practice-room').classList.remove('hidden');
-                // Start the timer
-                if (window.gameTimer) {
-                    window.gameTimer.start();
-                }
-                // Initialize progress
-                if (window.puzzleManager) {
-                    window.puzzleManager.updateProgress(0);
-                }
+            if (startButton) {
+                startButton.addEventListener('click', function() {
+                    // Hide intro room
+                    document.getElementById('intro-room').classList.add('hidden');
+                    // Show practice room
+                    document.getElementById('practice-room').classList.remove('hidden');
+                    // Start the timer
+                    if (window.gameTimer) {
+                        window.gameTimer.start();
+                    }
+                    // Initialize progress
+                    if (window.puzzleManager) {
+                        window.puzzleManager.updateProgress(0);
+                    }
+                });
+            }
+
+            // Initialize puzzle submission handlers
+            const practiceSubmit = document.getElementById('practice-submit');
+            if (practiceSubmit) {
+                practiceSubmit.addEventListener('click', function() {
+                    if (window.puzzleManager) {
+                        window.puzzleManager.checkPracticeAnswer();
+                    }
+                });
+            }
+
+            const smartSubmit = document.getElementById('smart-submit');
+            if (smartSubmit) {
+                smartSubmit.addEventListener('click', function() {
+                    if (window.puzzleManager) {
+                        window.puzzleManager.checkSmartAnswer();
+                    }
+                });
+            }
+
+            const goalSubmit = document.getElementById('goal-submit');
+            if (goalSubmit) {
+                goalSubmit.addEventListener('click', function() {
+                    if (window.puzzleManager) {
+                        window.puzzleManager.checkFinalGoal();
+                    }
+                });
+            }
+
+            // Add enter key support for inputs
+            document.querySelectorAll('.puzzle-input').forEach(input => {
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.nextElementSibling.click();
+                    }
+                });
             });
+
+            // Initialize restart button
+            const restartBtn = document.getElementById('restart-btn');
+            if (restartBtn) {
+                restartBtn.addEventListener('click', function() {
+                    location.reload();
+                });
+            }
         });
     </script>
 </body>
