@@ -1,16 +1,14 @@
-// timer.js
+// Simple timer functionality
 class Timer {
     constructor() {
         this.timeLeft = 45 * 60; // 45 minutes in seconds
+        this.timerDisplay = document.getElementById('timer');
         this.timerId = null;
-        this.display = document.getElementById('timer');
-        this.isRunning = false;
     }
 
     start() {
-        if (this.isRunning) return;
+        if (this.timerId) return; // Don't start if already running
         
-        this.isRunning = true;
         this.timerId = setInterval(() => {
             this.tick();
         }, 1000);
@@ -19,7 +17,7 @@ class Timer {
     tick() {
         if (this.timeLeft <= 0) {
             this.stop();
-            alert('Time's up! The IEP meeting is starting.');
+            alert('Time's up!');
             return;
         }
 
@@ -28,44 +26,29 @@ class Timer {
     }
 
     stop() {
-        this.isRunning = false;
         clearInterval(this.timerId);
+        this.timerId = null;
     }
 
     updateDisplay() {
         const minutes = Math.floor(this.timeLeft / 60);
         const seconds = this.timeLeft % 60;
-        
-        // Format numbers to always show two digits
-        const displayMinutes = String(minutes).padStart(2, '0');
-        const displaySeconds = String(seconds).padStart(2, '0');
-        
-        // Update the display
-        this.display.textContent = `${displayMinutes}:${displaySeconds}`;
-    }
-
-    reset() {
-        this.stop();
-        this.timeLeft = 45 * 60;
-        this.updateDisplay();
+        this.timerDisplay.textContent = 
+            `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     }
 }
 
-// Create and initialize the timer when the page loads
-let gameTimer;
-
+// Initialize timer and add start button listener
 document.addEventListener('DOMContentLoaded', () => {
-    gameTimer = new Timer();
-    window.gameTimer = gameTimer; // Make timer globally accessible
-    
-    // Initialize display
-    gameTimer.updateDisplay();
-    
-    // Add start button listener
-    const startButton = document.getElementById('start-btn');
-    if (startButton) {
-        startButton.addEventListener('click', () => {
-            gameTimer.start();
-        });
-    }
+    const timer = new Timer();
+    window.gameTimer = timer;
+
+    const startBtn = document.getElementById('start-btn');
+    startBtn.addEventListener('click', () => {
+        // Hide intro room and show practice room
+        document.getElementById('intro-room').classList.add('hidden');
+        document.getElementById('practice-room').classList.remove('hidden');
+        // Start timer
+        timer.start();
+    });
 });
