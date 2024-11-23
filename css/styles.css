@@ -1,4 +1,31 @@
 /* styles.css */
+.start-btn {
+    background: #4CAF50;
+    color: white;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin: 20px 0;
+    transition: background-color 0.3s ease;
+}
+
+.start-btn:hover {
+    background: #45a049;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.room {
+    margin-top: 80px;
+    padding: 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 :root {
     --primary-color: #4CAF50;
     --secondary-color: #2196F3;
