@@ -16,50 +16,51 @@
         </nav>
 
         <main class="game-container">
+            <!-- Introduction Room -->
             <div class="room" id="intro-room">
                 <h1>The Missing IEP Files</h1>
                 <p class="scenario">Welcome, Special Education teacher! The IEP meeting starts in 45 minutes, but the files have been locked. Can you solve the puzzles in time?</p>
-                <button class="start-btn" onclick="startGame()">Begin Challenge</button>
+                <button id="start-btn" class="start-btn">Begin Challenge</button>
             </div>
 
+            <!-- Practice Room -->
             <div class="room hidden" id="practice-room">
                 <h2>Practice Puzzle</h2>
                 <div class="puzzle-container">
                     <p>Unscramble these letters to find a key term in IEP goal writing:</p>
                     <div class="scrambled-word">BLESUAMEAR</div>
                     <input type="text" id="practice-answer" placeholder="Enter your answer">
-                    <button onclick="checkPracticeAnswer()">Submit</button>
+                    <button id="practice-submit">Submit</button>
                     <div class="feedback" id="practice-feedback"></div>
                 </div>
             </div>
 
+            <!-- SMART Room -->
             <div class="room hidden" id="smart-room">
                 <h2>SMART Components Challenge</h2>
                 <div class="matching-puzzle">
-                    <div class="term-container" id="terms">
-                        <!-- Terms will be populated by JavaScript -->
-                    </div>
-                    <div class="definition-container" id="definitions">
-                        <!-- Definitions will be populated by JavaScript -->
-                    </div>
+                    <div id="terms"></div>
+                    <div id="definitions"></div>
                 </div>
                 <input type="text" id="smart-answer" placeholder="Enter the code">
-                <button onclick="checkSmartAnswer()">Submit</button>
+                <button id="smart-submit">Submit</button>
                 <div class="feedback" id="smart-feedback"></div>
             </div>
 
+            <!-- Final Room -->
             <div class="room hidden" id="final-room">
                 <h2>Final Challenge</h2>
                 <div class="goal-writing">
                     <p class="scenario" id="student-scenario"></p>
                     <textarea id="goal-answer" placeholder="Write your SMART goal here..."></textarea>
-                    <button onclick="submitFinalGoal()">Submit Goal</button>
+                    <button id="goal-submit">Submit Goal</button>
+                    <div class="feedback" id="final-feedback"></div>
                 </div>
             </div>
         </main>
 
         <div class="hint-system">
-            <button onclick="getHint()" id="hint-btn">Get Hint (3 remaining)</button>
+            <button id="hint-btn">Get Hint (3 remaining)</button>
             <p id="current-hint"></p>
         </div>
     </div>
@@ -67,5 +68,28 @@
     <script src="js/timer.js"></script>
     <script src="js/puzzles.js"></script>
     <script src="js/validation.js"></script>
+    <script>
+        // Initialize game when document loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the start button
+            const startButton = document.getElementById('start-btn');
+            
+            // Add click event listener to start button
+            startButton.addEventListener('click', function() {
+                // Hide intro room
+                document.getElementById('intro-room').classList.add('hidden');
+                // Show practice room
+                document.getElementById('practice-room').classList.remove('hidden');
+                // Start the timer
+                if (window.gameTimer) {
+                    window.gameTimer.start();
+                }
+                // Initialize progress
+                if (window.puzzleManager) {
+                    window.puzzleManager.updateProgress(0);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
